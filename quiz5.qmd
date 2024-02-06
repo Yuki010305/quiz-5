@@ -1,0 +1,91 @@
+---
+title: "quiz5"
+author: "YANING JIN"
+format: pdf
+editor: visual
+---
+
+```{r, include=FALSE}
+install.packages("reshape2")
+library("reshape2")
+install.packages("ggplot2")
+library("ggplot2")
+install.packages("car")
+library("car")
+install.packages("MASS")
+library("MASS") 
+```
+
+# Simulate
+
+```{r}
+set.seed(123)
+matt_pages <- sample(20:100, 100, replace = TRUE)
+rol_pages <- sample(20:100, 100, replace = TRUE)
+mike_pages <- sample(20:100, 100, replace = TRUE)
+mean_pages <- c(60, 60)
+cor_matrix <- matrix(c(1, 0.7, 0.7, 1), 2, 2)
+correlated_pages <- mvrnorm(n = 100, mu = mean_pages, Sigma = cor_matrix * 15^2)
+ash_pages <- correlated_pages[,1]
+jacki_pages <- correlated_pages[,2]
+days <- 1:100
+reading_data <- data.frame(days, matt_pages, ash_pages, jacki_pages, rol_pages, mike_pages)
+# Test 1
+cor_ash_jacki <- cor(reading_data$ash_pages, reading_data$jacki_pages)
+print(paste("Correlation between Ash and Jacki's reading pages:", cor_ash_jacki))
+# Test 2
+mean_pages_read <- colMeans(reading_data[,-1])
+print("Mean pages read by each student:")
+print(mean_pages_read)
+# Test 3
+t_test_ash_vs_matt <- t.test(reading_data$ash_pages, reading_data$matt_pages)
+print("T-test result Ash vs Matt:")
+print(t_test_ash_vs_matt)
+# Test 4
+variance_pages_read <- apply(reading_data[,-1], 2, var)
+print("Variance of pages read per day for each student:")
+print(variance_pages_read)
+# Test 5
+max_pages_read <- apply(reading_data[,-1], 2, max)
+print("Maximum pages read in a day by each student:")
+print(max_pages_read)
+
+```
+
+# Explore
+
+```{r}
+library(ggplot2)
+set.seed(123)
+days <- 100
+avg_pages <- c(Matt = 50, Ash = 45, Jacki = 30, Rol = 40, Mike = 35)
+matt_pages <- rnorm(days, mean=avg_pages["Matt"], sd=10)
+ash_pages <- matt_pages + rnorm(days, mean=5, sd=5)  
+jacki_pages <- rnorm(days, mean=avg_pages["Jacki"], sd=15)
+rol_pages <- rnorm(days, mean=avg_pages["Rol"], sd=10)
+mike_pages <- rnorm(days, mean=avg_pages["Mike"], sd=8)
+matt_pages[matt_pages < 0] <- 0
+ash_pages[ash_pages < 0] <- 0
+jacki_pages[jacki_pages < 0] <- 0
+rol_pages[rol_pages < 0] <- 0
+mike_pages[mike_pages < 0] <- 0
+df_pages <- data.frame(
+  Day = 1:days,
+  Matt = matt_pages,
+  Ash = ash_pages,
+  Jacki = jacki_pages,
+  Rol = rol_pages,
+  Mike = mike_pages
+)
+ggplot(df_pages, aes(x = Day)) +
+  geom_line(aes(y = Matt, color = "Matt")) +
+  geom_line(aes(y = Ash, color = "Ash")) +
+  geom_line(aes(y = Jacki, color = "Jacki")) +
+  geom_line(aes(y = Rol, color = "Rol")) +
+  geom_line(aes(y = Mike, color = "Mike")) +
+  labs(title = "Daily Pages Read by Each Undergraduate Over 100 Days",
+       x = "Day", y = "Pages Read") +
+  scale_color_manual(values = c("Matt" = "blue", "Ash" = "red", "Jacki" = "green", "Rol" = "purple", "Mike" = "orange")) +
+  theme_minimal()
+
+```
