@@ -30,26 +30,18 @@ ash_pages <- correlated_pages[,1]
 jacki_pages <- correlated_pages[,2]
 days <- 1:100
 reading_data <- data.frame(days, matt_pages, ash_pages, jacki_pages, rol_pages, mike_pages)
-# Test 1
-cor_ash_jacki <- cor(reading_data$ash_pages, reading_data$jacki_pages)
-print(paste("Correlation between Ash and Jacki's reading pages:", cor_ash_jacki))
-# Test 2
-mean_pages_read <- colMeans(reading_data[,-1])
-print("Mean pages read by each student:")
-print(mean_pages_read)
-# Test 3
-t_test_ash_vs_matt <- t.test(reading_data$ash_pages, reading_data$matt_pages)
-print("T-test result Ash vs Matt:")
-print(t_test_ash_vs_matt)
-# Test 4
-variance_pages_read <- apply(reading_data[,-1], 2, var)
-print("Variance of pages read per day for each student:")
-print(variance_pages_read)
-# Test 5
-max_pages_read <- apply(reading_data[,-1], 2, max)
-print("Maximum pages read in a day by each student:")
-print(max_pages_read)
 
+cor_ash_jacki <- cor(reading_data$ash_pages, reading_data$jacki_pages)
+
+mean_pages_read <- colMeans(reading_data[,-1])
+
+t_test_ash_vs_matt <- t.test(reading_data$ash_pages, reading_data$matt_pages)
+
+variance_pages_read <- apply(reading_data[,-1], 2, var)
+
+max_pages_read <- apply(reading_data[,-1], 2, max)
+
+list(cor_ash_jacki, mean_pages_read, t_test_ash_vs_matt, variance_pages_read, max_pages_read)
 ```
 
 # Explore
